@@ -1,2 +1,2 @@
 # Baboucoin
-## Version Dev-1.0.0
+## Version Dev-1.1.0
