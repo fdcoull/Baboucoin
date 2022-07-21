@@ -1,0 +1,4 @@
+Dev 1.0.0
+*Created mine class
+*Added seeds for hash input
+*Added seed input dialogue
