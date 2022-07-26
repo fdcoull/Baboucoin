@@ -7,3 +7,7 @@ Dev-1.1.0
 *Program structure implemented
 *Main menu created
 *Create wallet module created
+
+Dev-1.2.0
+*App directory added
+*Modules moved to app directory

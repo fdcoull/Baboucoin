@@ -1,4 +1,4 @@
-from wallet.main import Wallet
+from app.baboucoin.Wallet.main import Wallet
 
 menuHeader = "Baboucoin version Dev-1.1.0\n"
 menuDivider = "=-=-=-=-=-=-=-=-=-=-=-=-=-=\n"
