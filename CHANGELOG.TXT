@@ -11,3 +11,5 @@ Dev-1.1.0
 Dev-1.2.0
 *App directory added
 *Modules moved to app directory
+*Config directory added
+*Blockchain directory renamed to database
