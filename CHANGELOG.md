@@ -15,3 +15,5 @@
 * Modules moved to app directory
 * Config directory added
 * Blockchain directory renamed to database
+* Blockchain structure implemented
+* Blockchain integrated into mine module
