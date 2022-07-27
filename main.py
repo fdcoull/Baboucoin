@@ -1,3 +1,8 @@
+# Baboucoin
+# Created by Finlay Daniel Coull
+# 2022-04-19
+# Main package initiator
+
 from app.baboucoin.Mine.main import Mine
 from app.baboucoin.Wallet.main import Wallet
 

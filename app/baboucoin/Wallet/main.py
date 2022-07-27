@@ -1,3 +1,8 @@
+# Baboucoin
+# Created by Finlay Daniel Coull
+# 2022-07-21
+# Wallet module
+
 import rsa
 import os
 

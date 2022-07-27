@@ -1,3 +1,8 @@
+# Baboucoin
+# Created by Finlay Daniel Coull
+# 2022-07-27
+# Mine module
+
 #TODO
 #-Check if new block added to blockchain - maybe by checking blockchain height at process start and checking its unchanged every iteration
 #-Calculate merkle root
