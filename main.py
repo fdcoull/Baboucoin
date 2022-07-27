@@ -1,3 +1,4 @@
+from app.baboucoin.Mine.main import Mine
 from app.baboucoin.Wallet.main import Wallet
 
 menuHeader = "Baboucoin version Dev-1.1.0\n"
@@ -49,14 +50,9 @@ class Menu():
         if userInput == '1':
             #Mining menu
             mineMenu()
-            print("Enter public key:")
-            userInput = input(menuCursor)
-            publicKey = userInput
-            print("Option unavailable for now")
-            #print("Initiating mining...")
-
+            mine = Mine()
+            mine.run()
             menu = False
-            #Run mining module
         elif userInput == '2':
             #Wallet menu
             walletMenu()
