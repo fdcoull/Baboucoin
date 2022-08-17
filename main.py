@@ -4,7 +4,7 @@
 # Main package initiator
 
 from app.baboucoin.Mine.main import Mine
-from app.baboucoin.Wallet.main import Wallet
+from app.baboucoin.RsaKey.main import RsaKey
 
 menuHeader = "Baboucoin version Dev-1.1.0\n"
 menuDivider = "=-=-=-=-=-=-=-=-=-=-=-=-=-=\n"
@@ -74,8 +74,8 @@ class Menu():
             elif userInput == '2':
                 #Create wallet option
                 walletCreateOption()
-                wallet = Wallet()
-                wallet.create()
+                rsaKey = RsaKey()
+                rsaKey.generate()
                 menu = False
         elif userInput == '3':
             print("Exiting...")

@@ -17,3 +17,6 @@
 * Blockchain directory renamed to database
 * Blockchain structure implemented
 * Blockchain integrated into mine module
+
+## Dev-1.3.0
+* Wallet class changed to RsaKey class

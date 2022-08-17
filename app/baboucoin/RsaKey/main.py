@@ -1,13 +1,13 @@
 # Baboucoin
 # Created by Finlay Daniel Coull
 # 2022-07-21
-# Wallet module
+# RSA Key module
 
 import rsa
 import os
 
-class Wallet():
-    def create(self):
+class RsaKey():
+    def generate(self):
         KEY_LENGTH = 1024
         publicKey, privateKey = rsa.newkeys(KEY_LENGTH)
 
