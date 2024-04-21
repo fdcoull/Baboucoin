@@ -1,5 +1,5 @@
 # Baboucoin
 
-from app.Menu.main import Menu
+from Menu.main import Menu
 
 menu = Menu()
