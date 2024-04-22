@@ -1,31 +1,44 @@
 import time
 import hashlib
 
+from Blockchain.main import Blockchain
+
 class Mine():
-    difficultyHex = "0000f"
+    def mine():
+        difficultyHex = "0000f"
 
-    awaitingMatch = True
-    nonce = 0
+        awaitingMatch = True
+        nonce = 0
 
-    # Check difficulty hash isn't over digits and append trailing 0s
-    if len(difficultyHex) < 64:
-        while len(difficultyHex) < 64:
-            difficultyHex = difficultyHex + "0"
-    elif len(difficultyHex) > 64:
-        awaitingMatch == False
-        print("Error: Difficulty too high")
+        # Get details from previous block
+        height = Blockchain.checkHeight() + 1
+        previousHash = Blockchain.checkPreviousHash()
 
-    # Set timestamp
-    timestamp = round(time.time())
+        # Check difficulty hash isn't over digits and append trailing 0s
+        if len(difficultyHex) < 64:
+            while len(difficultyHex) < 64:
+                difficultyHex = difficultyHex + "0"
+        elif len(difficultyHex) > 64:
+            awaitingMatch == False
+            print("Error: Difficulty too high")
+        
 
-    while awaitingMatch:
-        newHeaderHashInput = str(nonce)
-        newHeaderHash = hashlib.sha256(newHeaderHashInput.encode('utf-8')).hexdigest()
-        print(newHeaderHash)
+        while awaitingMatch:
+            # Set timestamp
+            timestamp = round(time.time())
 
-        if int(newHeaderHash, 16) <= int(difficultyHex, 16):
-            print("SUCCESS")
+            # Set new header hash input by concatenating fields
+            newHeaderHashInput = str(height) + str(previousHash) + difficultyHex + str(timestamp) + str(nonce)
 
-            awaitingMatch = False
+            # Hash header
+            newHeaderHash = hashlib.sha256(newHeaderHashInput.encode('utf-8')).hexdigest()
+            print(newHeaderHash)
 
-        nonce += 1
+            # Check if header hex is less than or equal to difficulty hex
+            if int(newHeaderHash, 16) <= int(difficultyHex, 16):
+                print("SUCCESS")
+                Blockchain.add(height, previousHash, difficultyHex, timestamp, nonce)
+
+                awaitingMatch = False
+
+            nonce += 1

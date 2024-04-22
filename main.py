@@ -14,5 +14,10 @@ if selected == "1":
     print("Test 1")
 elif selected == "2":
     print("Test 2")
+    Mine.mine()
 elif selected == "3":
     Blockchain.initialise()
+elif selected == "4":
+    Blockchain.display()
+elif selected == "5":
+    Blockchain.checkPreviousHash()

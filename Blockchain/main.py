@@ -1,6 +1,6 @@
 import sqlite3
 from contextlib import closing
-
+import hashlib
 
 
 class Blockchain:
@@ -40,7 +40,7 @@ class Blockchain:
         )""")
 
         # test addition
-        #cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 17, 1)")
+        #cursor.execute("INSERT INTO headers (previous_hash, difficulty, timestamp, nonce) VALUES ('AB123', '000F', 17, 1)")
         #cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 18, 24)")
 
         #cursor.execute("INSERT INTO transactions (height, timestamp, sender, recipient, value, signature) VALUES (1, 23, 'a', 'b', 50.123, 'jhsdhghg')")
@@ -56,6 +56,61 @@ class Blockchain:
         rows = cursor.execute("SELECT * FROM mempool").fetchall()
         print(rows)
 
+        connection.commit()
         connection.close()
 
+    def checkHeight():
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+
+        row = cursor.execute("SELECT height FROM headers ORDER BY height DESC LIMIT 1").fetchall()
+
+        if len(row) < 1:
+            # Set height to -1 if blockchain empty
+            height = -1
+        else:
+            # Set height to current height if blockchain not empty
+            height = row[0][0]
+
+        print(height)
+
+        connection.close()
+
+        return height
     
+    def checkPreviousHash():
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+
+        row = cursor.execute("SELECT * FROM headers ORDER BY height DESC LIMIT 1").fetchall()
+
+        if len(row) < 1:
+            # Set previous hash to none if blockchain empty
+            previousHash = None
+        else:
+            # Calculate previous hash by concatenating previous block fields and hashing
+            previousHashInput = str(row[0][0]) + str(row[0][1]) + str(row[0][2]) + str(row[0][3]) + str(row[0][4])
+            previousHash = hashlib.sha256(previousHashInput.encode('utf-8')).hexdigest()
+
+        return previousHash
+    
+    def add(height, previousHash, difficulty, timestamp, nonce):
+        print("Added")
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO headers (height, previous_hash, difficulty, timestamp, nonce) VALUES (" + str(height) + ", '" + str(previousHash) + "', '" + difficulty + "', " + str(timestamp) + ", " + str(nonce) + ")")
+
+        # Also add transactions here (reward + mempool)
+        connection.commit()
+        connection.close()
+
+    def display():
+        # Display blockchain headers
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+
+        rows = cursor.execute("SELECT * FROM headers").fetchall()
+        print(rows)
+
+
