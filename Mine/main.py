@@ -7,6 +7,7 @@ class Mine():
     awaitingMatch = True
     nonce = 0
 
+    # Check difficulty hash isn't over digits and append trailing 0s
     if len(difficultyHex) < 64:
         while len(difficultyHex) < 64:
             difficultyHex = difficultyHex + "0"
@@ -14,6 +15,7 @@ class Mine():
         awaitingMatch == False
         print("Error: Difficulty too high")
 
+    # Set timestamp
     timestamp = round(time.time())
 
     while awaitingMatch:

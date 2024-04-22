@@ -13,6 +13,7 @@ class Blockchain:
         cursor.execute("DROP TABLE IF EXISTS headers")
         cursor.execute("""CREATE TABLE headers (
             height INTEGER, 
+            previous_hash TEXT,
             difficulty TEXT, 
             timestamp INTEGER, 
             nonce INTEGER, 
@@ -23,7 +24,6 @@ class Blockchain:
         cursor.execute("DROP TABLE IF EXISTS transactions")
         cursor.execute("""CREATE TABLE transactions (
             height INTEGER, 
-            timestamp INTEGER, 
             sender TEXT, 
             recipient TEXT, 
             value DECIMAL(6,3), 
@@ -33,7 +33,6 @@ class Blockchain:
         # Create mempool table
         cursor.execute("DROP TABLE IF EXISTS mempool")
         cursor.execute("""CREATE TABLE mempool (
-            timestamp INTEGER,
             sender TEXT,
             recipient TEXT,
             value DECIMAL(6,3),
@@ -41,12 +40,12 @@ class Blockchain:
         )""")
 
         # test addition
-        cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 17, 1)")
-        cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 18, 24)")
+        #cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 17, 1)")
+        #cursor.execute("INSERT INTO headers (difficulty, timestamp, nonce) VALUES ('000F', 18, 24)")
 
-        cursor.execute("INSERT INTO transactions (height, timestamp, sender, recipient, value, signature) VALUES (1, 23, 'a', 'b', 50.123, 'jhsdhghg')")
+        #cursor.execute("INSERT INTO transactions (height, timestamp, sender, recipient, value, signature) VALUES (1, 23, 'a', 'b', 50.123, 'jhsdhghg')")
 
-        cursor.execute("INSERT INTO mempool (timestamp, sender, recipient, value, signature) VALUES (23, 'a', 'b', 50.123, 'jhsdhghg')")
+        #cursor.execute("INSERT INTO mempool (timestamp, sender, recipient, value, signature) VALUES (23, 'a', 'b', 50.123, 'jhsdhghg')")
 
         rows = cursor.execute("SELECT * FROM headers").fetchall()
         print(rows)
@@ -58,3 +57,5 @@ class Blockchain:
         print(rows)
 
         connection.close()
+
+    
