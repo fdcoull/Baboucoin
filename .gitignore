@@ -1,2 +1,8 @@
 __pycache__/
 blockchain.db
+
+privkey.pem
+pubkey.pem
+
+privkey2.pem
+pubkey2.pem

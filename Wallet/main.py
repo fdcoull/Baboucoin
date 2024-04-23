@@ -2,39 +2,64 @@ import rsa
 
 class Wallet:
     def create():
-        (pubKey, privKey) = rsa.newkeys(1024)
+        print("TEST")
+        (pubkey, privkey) = rsa.newkeys(256, poolsize=8)
+
+        print("Public: " + str(pubkey))
+        print("Private: " + str(privkey))
+
+    def save():
+        (pubkey, privkey) = rsa.newkeys(512, poolsize=8)
         with open('pubkey.pem', 'wb') as f:
-            f.write(pubKey.save_pkcs1('PEM'))
+            f.write(pubkey.save_pkcs1('PEM'))
 
         with open('privkey.pem', 'wb') as f:
-            f.write(privKey.save_pkcs1('PEM'))
+            f.write(privkey.save_pkcs1('PEM'))
 
-    def read():
-        with open('pubkey.pem', 'rb') as f:
-            pubKey = rsa.PublicKey.load_pkcs1(f.read())
+        print("Public: " + str(pubkey))
+        print("Private: " + str(privkey))
 
-        with open('privkey.pem', 'rb') as f:
-            privKey = rsa.PrivateKey.load_pkcs1(f.read())
+    # Copy of above for testing
+    def save2():
+        (pubkey, privkey) = rsa.newkeys(512, poolsize=8)
+        with open('pubkey2.pem', 'wb') as f:
+            f.write(pubkey.save_pkcs1('PEM'))
 
-        return pubKey, privKey
+        with open('privkey2.pem', 'wb') as f:
+            f.write(privkey.save_pkcs1('PEM'))
 
-    def sign_sha1(msg, key):
-        return rsa.sign(msg.encode('ascii'), key, 'SHA-1')
+        print("Public: " + str(pubkey))
+        print("Private: " + str(privkey))
 
-    def verify_sha1(msg, signature, key):
-        try:
-            return rsa.verify(msg.encode('ascii'), signature, key) == 'SHA-1'
-        except:
-            return False
+    def load():
+        with open('privkey.pem', mode='rb') as f:
+            keydata = f.read()
+        privkey = rsa.PrivateKey.load_pkcs1(keydata)
 
-    create()
-    pubKey, privKey = read()
+        with open('pubkey.pem', mode='rb') as f:
+            keydata = f.read()
+        pubkey = rsa.PublicKey.load_pkcs1(keydata)
+        return pubkey, privkey
+    
+    # Copy of above for testing
+    def load2():
+        with open('privkey2.pem', mode='rb') as f:
+            keydata = f.read()
+        privkey = rsa.PrivateKey.load_pkcs1(keydata)
 
-    message = "abc" + "abc" + str(20)
+        with open('pubkey2.pem', mode='rb') as f:
+            keydata = f.read()
+        pubkey = rsa.PublicKey.load_pkcs1(keydata)
+        return pubkey, privkey
 
-    signature = sign_sha1(message, privKey)
+    def sign(privkey, transaction):
+        input = transaction.encode()
+        signature = rsa.sign(input, privkey, 'SHA-1')
+        return signature
 
-    if verify_sha1(message, signature, pubKey):
-        print('Signature verified')
-    else:
-        print("Could not verify")
+    def verify(pubkey, signature, transaction):
+        input = transaction.encode()
+        rsa.verify(input, signature, pubkey)
+
+    def send(privkey, recipient, value):
+        
