@@ -100,6 +100,8 @@ class Blockchain:
         cursor = connection.cursor()
 
         cursor.execute("INSERT INTO headers (height, previous_hash, difficulty, timestamp, nonce) VALUES (" + str(height) + ", '" + str(previousHash) + "', '" + difficulty + "', " + str(timestamp) + ", " + str(nonce) + ")")
+        cursor.execute("INSERT INTO transactions (height, sender, recipient, value, signature) VALUES (" + str(height) + ", NULL, '" + str("Dan") + "', " + str(10) + ", NULL)")
+
 
         # Also add transactions here (reward + mempool)
         connection.commit()
@@ -110,7 +112,12 @@ class Blockchain:
         connection = sqlite3.connect("blockchain.db")
         cursor = connection.cursor()
 
+        print("Blockchain")
         rows = cursor.execute("SELECT * FROM headers").fetchall()
+        print(rows)
+
+        print("Transactions")
+        rows = cursor.execute("SELECT * FROM transactions").fetchall()
         print(rows)
 
 
