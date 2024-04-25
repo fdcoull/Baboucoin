@@ -20,8 +20,12 @@ if selected == "1":
     if selected == "1":
         Wallet.save()
     elif selected == "2":
+        print(Wallet.loadFile())
         print(Wallet.load())
-
+    elif selected == "3":
+        signature = Wallet.sign()
+        print(signature)
+        print(Wallet.verify(signature))
 elif selected == "2":
     print("Test 2")
     Mine.mine()

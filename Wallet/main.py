@@ -1,65 +1,62 @@
-import rsa
+from Crypto.PublicKey import RSA
+from base64 import b64decode
+from Crypto.Signature import PKCS1_v1_5
+from Crypto.Hash import SHA256
 
 class Wallet:
-    def create():
-        print("TEST")
-        (pubkey, privkey) = rsa.newkeys(256, poolsize=8)
-
-        print("Public: " + str(pubkey))
-        print("Private: " + str(privkey))
-
     def save():
-        (pubkey, privkey) = rsa.newkeys(512, poolsize=8)
-        with open('pubkey.pem', 'wb') as f:
-            f.write(pubkey.save_pkcs1('PEM'))
+        key = RSA.generate(1024)
+        private_key = key.export_key()
+        print(private_key)
+        with open("privkey.pem", "wb") as f:
+            f.write(private_key)
+        
+        public_key = key.publickey().export_key()
+        with open("pubkey.pem", "wb") as f:
+            f.write(public_key)
 
-        with open('privkey.pem', 'wb') as f:
-            f.write(privkey.save_pkcs1('PEM'))
+    def loadFile():
+        encoded_key = open("privkey.pem", "rb").read()
+        key = RSA.import_key(encoded_key)
 
-        print("Public: " + str(pubkey))
-        print("Private: " + str(privkey))
-
-    # Copy of above for testing
-    def save2():
-        (pubkey, privkey) = rsa.newkeys(512, poolsize=8)
-        with open('pubkey2.pem', 'wb') as f:
-            f.write(pubkey.save_pkcs1('PEM'))
-
-        with open('privkey2.pem', 'wb') as f:
-            f.write(privkey.save_pkcs1('PEM'))
-
-        print("Public: " + str(pubkey))
-        print("Private: " + str(privkey))
+        print(key.export_key())
+        print(key.public_key().export_key())
 
     def load():
-        with open('privkey.pem', mode='rb') as f:
-            keydata = f.read()
-        privkey = rsa.PrivateKey.load_pkcs1(keydata)
-
-        with open('pubkey.pem', mode='rb') as f:
-            keydata = f.read()
-        pubkey = rsa.PublicKey.load_pkcs1(keydata)
-        return pubkey, privkey
-    
-    # Copy of above for testing
-    def load2():
-        with open('privkey2.pem', mode='rb') as f:
-            keydata = f.read()
-        privkey = rsa.PrivateKey.load_pkcs1(keydata)
-
-        with open('pubkey2.pem', mode='rb') as f:
-            keydata = f.read()
-        pubkey = rsa.PublicKey.load_pkcs1(keydata)
-        return pubkey, privkey
-
-    def sign(privkey, transaction):
-        input = transaction.encode()
-        signature = rsa.sign(input, privkey, 'SHA-1')
-        return signature
-
-    def verify(pubkey, signature, transaction):
-        input = transaction.encode()
-        rsa.verify(input, signature, pubkey)
-
-    def send(privkey, recipient, value):
+        key = b'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB'
         
+        keyDecoded = b64decode(key)
+        importedKey = RSA.import_key(keyDecoded)
+
+        print(importedKey.export_key())
+
+        return key
+
+    def sign():
+        encoded_key = open("privkey.pem", "rb").read()
+        key = RSA.import_key(encoded_key)
+
+        signer = PKCS1_v1_5.new(key)
+
+        data = b'test'
+
+        digest = SHA256.new(data)
+
+        return signer.sign(digest)
+    
+    def verify(signature):
+        key = b'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB'
+        
+        signer = PKCS1_v1_5.new(RSA.import_key(b64decode(key)))
+
+        data = b'tedst'
+
+        digest = SHA256.new(data)
+
+        #return signer.verify(digest, signature)
+    
+        if signer.verify(digest, signature):
+            print("Valid")
+        else:
+            print("Invalid")
+

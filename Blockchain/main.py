@@ -103,7 +103,7 @@ class Blockchain:
         cursor.execute("INSERT INTO transactions (height, sender, recipient, value, signature) VALUES (" + str(height) + ", NULL, '" + str("Dan") + "', " + str(10) + ", NULL)")
 
 
-        # Also add transactions here (reward + mempool)
+        # Also add transactions here (mempool)
         connection.commit()
         connection.close()
 
