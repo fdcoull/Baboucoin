@@ -100,7 +100,7 @@ class Blockchain:
         cursor = connection.cursor()
 
         cursor.execute("INSERT INTO headers (height, previous_hash, difficulty, timestamp, nonce) VALUES (" + str(height) + ", '" + str(previousHash) + "', '" + difficulty + "', " + str(timestamp) + ", " + str(nonce) + ")")
-        cursor.execute("INSERT INTO transactions (height, sender, recipient, value, signature) VALUES (" + str(height) + ", NULL, '" + str("Dan") + "', " + str(10) + ", NULL)")
+        cursor.execute("INSERT INTO transactions (height, sender, recipient, value, signature) VALUES (" + str(height) + ", NULL, '" + str("MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB") + "', " + str(10) + ", NULL)")
 
 
         # Also add transactions here (mempool)
