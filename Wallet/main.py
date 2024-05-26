@@ -35,6 +35,23 @@ class Wallet:
         print(private_stripped)
         print(public_stripped)
 
+    def getAddress():
+        # Get public key from input private key
+
+        print("Input private key:")
+
+        key = input().encode()
+
+        keyDecoded = b64decode(key)
+
+        importedKey = RSA.import_key(keyDecoded)
+
+        public_stripped = importedKey.publickey().export_key().replace(b'-----BEGIN PUBLIC KEY-----', b'')
+        public_stripped = public_stripped.replace(b'\n', b'')
+        public_stripped = public_stripped.replace(b'-----END PUBLIC KEY-----', b'')
+
+        print(public_stripped)
+
 
     def loadFile():
         encoded_key = open("privkey.pem", "rb").read()
