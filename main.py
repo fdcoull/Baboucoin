@@ -18,7 +18,7 @@ if selected == "1":
     """)
     selected = input("\nEnter option: ")
     if selected == "1":
-        Wallet.save()
+        Wallet.create()
     elif selected == "2":
         print(Wallet.loadFile())
         print(Wallet.load())

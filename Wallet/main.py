@@ -15,6 +15,27 @@ class Wallet:
         with open("pubkey.pem", "wb") as f:
             f.write(public_key)
 
+    def create():
+        # New method of saving - outputs to terminal and doesnt save
+        # Strips tags as output
+
+        key = RSA.generate(1024)
+        private_key = key.export_key()
+
+        private_stripped = private_key.replace(b'-----BEGIN RSA PRIVATE KEY-----', b'')
+        private_stripped = private_stripped.replace(b'\n', b'')
+        private_stripped = private_stripped.replace(b'-----END RSA PRIVATE KEY-----', b'')
+
+        public_key = key.publickey().export_key()
+
+        public_stripped = public_key.replace(b'-----BEGIN PUBLIC KEY-----', b'')
+        public_stripped = public_stripped.replace(b'\n', b'')
+        public_stripped = public_stripped.replace(b'-----END PUBLIC KEY-----', b'')
+
+        print(private_stripped)
+        print(public_stripped)
+
+
     def loadFile():
         encoded_key = open("privkey.pem", "rb").read()
         key = RSA.import_key(encoded_key)
