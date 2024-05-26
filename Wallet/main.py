@@ -22,15 +22,11 @@ class Wallet:
         key = RSA.generate(1024)
         private_key = key.export_key()
 
-        private_stripped = private_key.replace(b'-----BEGIN RSA PRIVATE KEY-----', b'')
-        private_stripped = private_stripped.replace(b'\n', b'')
-        private_stripped = private_stripped.replace(b'-----END RSA PRIVATE KEY-----', b'')
+        private_stripped = Wallet.stripKeyTags(private_key)
 
         public_key = key.publickey().export_key()
 
-        public_stripped = public_key.replace(b'-----BEGIN PUBLIC KEY-----', b'')
-        public_stripped = public_stripped.replace(b'\n', b'')
-        public_stripped = public_stripped.replace(b'-----END PUBLIC KEY-----', b'')
+        public_stripped = Wallet.stripKeyTags(public_key)
 
         print(private_stripped)
         print(public_stripped)
@@ -46,12 +42,21 @@ class Wallet:
 
         importedKey = RSA.import_key(keyDecoded)
 
-        public_stripped = importedKey.publickey().export_key().replace(b'-----BEGIN PUBLIC KEY-----', b'')
-        public_stripped = public_stripped.replace(b'\n', b'')
-        public_stripped = public_stripped.replace(b'-----END PUBLIC KEY-----', b'')
+        print(Wallet.stripKeyTags(importedKey.publickey().export_key()))
 
-        print(public_stripped)
+    def stripKeyTags(key):
+        # Strip tags from keys
 
+        keyStripped = key.replace(b'\n', b'')
+        
+        if b'-----BEGIN PUBLIC KEY-----' in keyStripped:
+            keyStripped = keyStripped.replace(b'-----BEGIN PUBLIC KEY-----', b'')
+            keyStripped = keyStripped.replace(b'-----END PUBLIC KEY-----', b'')
+        elif b'-----BEGIN RSA PRIVATE KEY-----' in keyStripped:
+            keyStripped = keyStripped.replace(b'-----BEGIN RSA PRIVATE KEY-----', b'')
+            keyStripped = keyStripped.replace(b'-----END RSA PRIVATE KEY-----', b'')
+
+        return keyStripped
 
     def loadFile():
         encoded_key = open("privkey.pem", "rb").read()
