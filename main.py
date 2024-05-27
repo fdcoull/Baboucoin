@@ -7,6 +7,7 @@ from Wallet.main import Wallet
 print("Baboucoin")
 print ("""1. Wallet\n
         2. Mine\n
+        3. Admin tools\n
         """)
 
 selected = input("\nEnter option: ")
@@ -33,8 +34,12 @@ elif selected == "2":
     print("Test 2")
     Mine.mine()
 elif selected == "3":
-    Blockchain.initialise()
-elif selected == "4":
-    Blockchain.display()
-elif selected == "5":
-    Blockchain.checkPreviousHash()
+    print("--- Admin tools ---")
+    print(""" 1. Clear local blockchain\n
+          2. View blockchain
+    """)
+    selected = input("\nEnter option: ")
+    if selected == "1":
+        Blockchain.initialise()
+    elif selected == "2":
+        Blockchain.display()
