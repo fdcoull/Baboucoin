@@ -120,4 +120,14 @@ class Blockchain:
         rows = cursor.execute("SELECT * FROM transactions").fetchall()
         print(rows)
 
+    def getBalance():
+        # Get balance of a given address
+
+        address = input("\nEnter wallet address: ")
+
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+        rows = cursor.execute("SELECT (SELECT COALESCE(SUM(value), 0) FROM transactions WHERE recipient = '" + address + "') - (SELECT COALESCE(SUM(value), 0) FROM transactions WHERE sender = '" + address + "')").fetchall()
+        print(rows)
+        connection.close()
 

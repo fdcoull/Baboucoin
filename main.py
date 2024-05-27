@@ -17,6 +17,7 @@ if selected == "1":
     print(""" 1. Create\n
         2. Get address
         3. Load
+        4. Get balance
     """)
     selected = input("\nEnter option: ")
     if selected == "1":
@@ -27,6 +28,8 @@ if selected == "1":
         print(Wallet.loadFile())
         print(Wallet.load())
     elif selected == "4":
+        print(Blockchain.getBalance())
+    elif selected == "5":
         signature = Wallet.sign()
         print(signature)
         print(Wallet.verify(signature))
