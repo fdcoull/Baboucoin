@@ -39,7 +39,7 @@ class Mine():
             # Check if header hex is less than or equal to difficulty hex
             if int(newHeaderHash, 16) <= int(difficultyHex, 16):
                 print("SUCCESS")
-                Blockchain.add(height, previousHash, difficultyHex, timestamp, nonce, address)
+                Blockchain.reward(height, previousHash, difficultyHex, timestamp, nonce, address)
 
                 awaitingMatch = False
 

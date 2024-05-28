@@ -31,18 +31,18 @@ class Wallet:
         print(private_stripped)
         print(public_stripped)
 
-    def getAddress():
+    def getAddress(private):
         # Get public key from input private key
 
-        print("Input private key:")
-
-        key = input().encode()
-
-        keyDecoded = b64decode(key)
+        keyDecoded = b64decode(private)
 
         importedKey = RSA.import_key(keyDecoded)
 
-        print(Wallet.stripKeyTags(importedKey.publickey().export_key()))
+        publicKey = Wallet.stripKeyTags(importedKey.publickey().export_key())
+
+        # print(Wallet.stripKeyTags(importedKey.publickey().export_key()))
+
+        return publicKey
 
     def stripKeyTags(key):
         # Strip tags from keys
@@ -75,13 +75,12 @@ class Wallet:
 
         return key
 
-    def sign():
-        encoded_key = open("privkey.pem", "rb").read()
-        key = RSA.import_key(encoded_key)
+    def sign(private, message):
+        key = RSA.import_key(private)
 
         signer = PKCS1_v1_5.new(key)
 
-        data = b'test'
+        data = message.encode()
 
         digest = SHA256.new(data)
 
@@ -102,4 +101,6 @@ class Wallet:
             print("Valid")
         else:
             print("Invalid")
+
+
 

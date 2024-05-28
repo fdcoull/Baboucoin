@@ -1,6 +1,8 @@
 import sqlite3
 from contextlib import closing
 import hashlib
+from base64 import b64decode
+from Wallet.main import Wallet
 
 
 class Blockchain:
@@ -94,7 +96,7 @@ class Blockchain:
 
         return previousHash
     
-    def add(height, previousHash, difficulty, timestamp, nonce, address):
+    def reward(height, previousHash, difficulty, timestamp, nonce, address):
         print("Added")
         connection = sqlite3.connect("blockchain.db")
         cursor = connection.cursor()
@@ -112,12 +114,16 @@ class Blockchain:
         connection = sqlite3.connect("blockchain.db")
         cursor = connection.cursor()
 
-        print("Blockchain")
+        print("Blockchain:")
         rows = cursor.execute("SELECT * FROM headers").fetchall()
         print(rows)
 
-        print("Transactions")
+        print("Transactions:")
         rows = cursor.execute("SELECT * FROM transactions").fetchall()
+        print(rows)
+
+        print("Mempool:")
+        rows = cursor.execute("SELECT * FROM mempool").fetchall()
         print(rows)
 
     def getBalance():
@@ -131,3 +137,33 @@ class Blockchain:
         print(rows)
         connection.close()
 
+    def send():
+        # Input and handle private key
+        privateKey = input("Input private key").encode()
+        keyDecoded = b64decode(privateKey)
+
+        # Get public key using private key
+        address = Wallet.getAddress(privateKey)
+
+        # Input recipient address
+        recipient = input("Input recipient's address: ")
+
+        # Input payment to send
+        pay = input("Input payment to send: ")
+
+        # Sign transaction
+        message = str(address) + str(recipient) + str(pay)
+        signature = Wallet.sign(keyDecoded, message)
+        signatureParsed = signature.replace(b'\\', b'\\\\')
+        signatureParsed = signatureParsed.replace(b'"', b'\"')
+        signatureParsed = signatureParsed.replace(b"'", b"\\'")
+
+        print(str(signature))
+
+        connection = sqlite3.connect("blockchain.db")
+        cursor = connection.cursor()
+
+        cursor.execute("INSERT INTO mempool (sender, recipient, value, signature) VALUES (?, ?, ?, ?)", (address.decode('utf-8'), recipient, pay, signature))
+    
+        connection.commit()
+        connection.close()

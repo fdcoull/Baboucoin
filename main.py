@@ -18,18 +18,22 @@ if selected == "1":
         2. Get address
         3. Load
         4. Get balance
+        5. Send
     """)
     selected = input("\nEnter option: ")
     if selected == "1":
         Wallet.create()
     elif selected == "2":
-        Wallet.getAddress()
+        private = input("Enter private key: ").encode()
+        print(Wallet.getAddress(private))
     elif selected == "3":
         print(Wallet.loadFile())
         print(Wallet.load())
     elif selected == "4":
         print(Blockchain.getBalance())
     elif selected == "5":
+        Blockchain.send()
+    elif selected == "6":
         signature = Wallet.sign()
         print(signature)
         print(Wallet.verify(signature))
