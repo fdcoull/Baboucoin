@@ -4,84 +4,60 @@ from Crypto.Signature import PKCS1_v1_5
 from Crypto.Hash import SHA256
 
 class Wallet:
-    def save():
-        key = RSA.generate(1024)
-        private_key = key.export_key()
-        print(private_key)
-        with open("privkey.pem", "wb") as f:
-            f.write(private_key)
-        
-        public_key = key.publickey().export_key()
-        with open("pubkey.pem", "wb") as f:
-            f.write(public_key)
-
     def create():
-        # New method of saving - outputs to terminal and doesnt save
-        # Strips tags as output
+        # Generate new key pair for wallet
 
+        # Generate RSA key pair
         key = RSA.generate(1024)
         private_key = key.export_key()
-
-        private_stripped = Wallet.stripKeyTags(private_key)
-
         public_key = key.publickey().export_key()
 
+        # Strip tags from keys
+        private_stripped = Wallet.stripKeyTags(private_key)
         public_stripped = Wallet.stripKeyTags(public_key)
 
+        # Output result to user
         print(private_stripped)
         print(public_stripped)
 
     def getAddress(private):
         # Get public key from input private key
 
+        # Decode private key and import
         keyDecoded = b64decode(private)
-
         importedKey = RSA.import_key(keyDecoded)
 
+        # Export public key and strip tags
         publicKey = Wallet.stripKeyTags(importedKey.publickey().export_key())
-
-        # print(Wallet.stripKeyTags(importedKey.publickey().export_key()))
 
         return publicKey
 
     def stripKeyTags(key):
         # Strip tags from keys
 
+        # Remove newlines
         keyStripped = key.replace(b'\n', b'')
         
         if b'-----BEGIN PUBLIC KEY-----' in keyStripped:
+            # Replace public key tags
             keyStripped = keyStripped.replace(b'-----BEGIN PUBLIC KEY-----', b'')
             keyStripped = keyStripped.replace(b'-----END PUBLIC KEY-----', b'')
         elif b'-----BEGIN RSA PRIVATE KEY-----' in keyStripped:
+            # Replace private key tags
             keyStripped = keyStripped.replace(b'-----BEGIN RSA PRIVATE KEY-----', b'')
             keyStripped = keyStripped.replace(b'-----END RSA PRIVATE KEY-----', b'')
 
         return keyStripped
 
-    def loadFile():
-        encoded_key = open("privkey.pem", "rb").read()
-        key = RSA.import_key(encoded_key)
-
-        print(key.export_key())
-        print(key.public_key().export_key())
-
-    def load():
-        key = b'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB'
-        
-        keyDecoded = b64decode(key)
-        importedKey = RSA.import_key(keyDecoded)
-
-        print(importedKey.export_key())
-
-        return key
-
     def sign(private, message):
-        key = RSA.import_key(private)
+        # Sign transaction using private key
 
+        # Import key to create signer
+        key = RSA.import_key(private)
         signer = PKCS1_v1_5.new(key)
 
+        # Process transaction data
         data = message.encode()
-
         digest = SHA256.new(data)
 
         return signer.sign(digest)
