@@ -62,7 +62,21 @@ class Wallet:
 
         return signer.sign(digest)
     
-    def verify(signature):
+    def verify(publicKey, message, signature):
+        key = b'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB'
+        
+        signer = PKCS1_v1_5.new(RSA.import_key(b64decode(publicKey)))
+
+        digest = SHA256.new(message.encode())
+
+        print(message)
+    
+        if signer.verify(digest, signature):
+            print("Valid")
+        else:
+            print("Invalid")
+
+    def verifyOld(signature):
         key = b'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCoQwutD8RfhaRVHpitV9FpJBvaWJC5zu6TzuhV9vddu1V447sVSVUYUe/WNBHktxD7DzVsn1OXjaoofiv0Bu4171QNDtQZYtJ0Q21SqRBToSn4TO4H6TAHUMw+AtZH5s15uqHuaV5eQTOJSRy4CUmvlTDN0pwbrKXEKWZ0/BWo4QIDAQAB'
         
         signer = PKCS1_v1_5.new(RSA.import_key(b64decode(key)))

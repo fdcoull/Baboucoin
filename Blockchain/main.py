@@ -104,8 +104,15 @@ class Blockchain:
         cursor.execute("INSERT INTO headers (height, previous_hash, difficulty, timestamp, nonce) VALUES (" + str(height) + ", '" + str(previousHash) + "', '" + difficulty + "', " + str(timestamp) + ", " + str(nonce) + ")")
         cursor.execute("INSERT INTO transactions (height, sender, recipient, value, signature) VALUES (" + str(height) + ", NULL, '" + str(address) + "', " + str(10) + ", NULL)")
 
+        # Verify mempool
+        rows = cursor.execute("SELECT * FROM mempool").fetchall()
+        print(rows)
 
-        # Also add transactions here (mempool)
+        for row in rows:
+            transaction = str(row[0]) + str(row[1]) + str(row[2])
+            print(transaction)
+            Wallet.verify(row[0], transaction, row[3])
+
         connection.commit()
         connection.close()
 
@@ -152,13 +159,13 @@ class Blockchain:
         pay = input("Input payment to send: ")
 
         # Sign transaction
-        message = str(address) + str(recipient) + str(pay)
+        message = str(address.decode('utf-8')) + str(recipient) + str(pay)
         signature = Wallet.sign(keyDecoded, message)
-        signatureParsed = signature.replace(b'\\', b'\\\\')
-        signatureParsed = signatureParsed.replace(b'"', b'\"')
-        signatureParsed = signatureParsed.replace(b"'", b"\\'")
 
         print(str(signature))
+
+        # Verify signature
+        Wallet.verify(address.decode('utf-8'), message, signature)
 
         connection = sqlite3.connect("blockchain.db")
         cursor = connection.cursor()
