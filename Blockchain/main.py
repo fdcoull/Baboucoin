@@ -38,7 +38,7 @@ class Blockchain:
             sender TEXT,
             recipient TEXT,
             value DECIMAL(6,3),
-            signature TEXT
+            signature BLOB
         )""")
 
         # test addition
